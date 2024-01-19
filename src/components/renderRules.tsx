@@ -18,7 +18,6 @@ const renderRules: Record<
     );
   },
   paragraph: (node: JSONContent, index: number, children: React.ReactNode) => {
-    console.log(node.id);
     return (
       <ParagraphNode
         key={node.id}

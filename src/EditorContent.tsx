@@ -6,6 +6,7 @@ import type { JSONContent, TextContentType } from './types';
 import renderRules from './components/renderRules';
 import type { NativeSyntheticEvent } from 'react-native';
 import type { TextInputSelectionChangeEventData } from 'react-native';
+import type { TextInputTextInputEventData } from 'react-native';
 interface EditorContentProps
   extends Omit<TextInputProps, 'value' | 'multiline' | 'children'> {
   editor: Editor;
@@ -28,11 +29,14 @@ export class EditorContent extends React.PureComponent<
     nativeEvent,
   }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) {
     const selection = nativeEvent.selection;
-    if (__DEV__) {
-      console.log('onSelectionChange', selection);
-    }
+
     const { editor } = this.props;
     editor.setSelection(selection.start, selection.end);
+  }
+  onTextInput({
+    nativeEvent,
+  }: NativeSyntheticEvent<TextInputTextInputEventData>) {
+    this.props.editor.onTextInputChange(nativeEvent);
   }
   getRenderNodeFunction(type: TextContentType) {
     const { renderNodes = {} } = this.props;
@@ -64,18 +68,15 @@ export class EditorContent extends React.PureComponent<
   render(): React.ReactNode {
     const { editor, inputRef, ...rest } = this.props;
     const renderedNode = this.renderNode(editor.contentAsJson());
-    const editorSelection = editor.state.selection;
-    const selection = {
-      start: editorSelection.from,
-      end: editorSelection.to,
-    };
+
     return (
       <TextInput
         ref={inputRef}
         multiline
-        selection={selection}
+        // selection={selection}
         autoComplete="off"
         autoCorrect={false}
+        onTextInput={this.onTextInput.bind(this)}
         onSelectionChange={this.onSelectionChange.bind(this)}
         autoCapitalize="none"
         spellCheck={false}

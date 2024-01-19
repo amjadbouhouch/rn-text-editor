@@ -39,3 +39,10 @@ export function resolveFocusPosition(
     commonHelper.minMax(position, minPos, maxPos)
   );
 }
+export function isOutOfRange(
+  position: number,
+  minPos: number,
+  maxPos: number
+): boolean {
+  return position < minPos || position > maxPos;
+}
