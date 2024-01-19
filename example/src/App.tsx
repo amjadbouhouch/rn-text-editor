@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, TextInput } from 'react-native';
-import { useEditor, EditorContent } from 'react-native-rn-text-editor';
+import { useEditor, EditorContent } from 'rn-text-editor';
 
 export default function App() {
   const inputRef = React.useRef<TextInput>(null);

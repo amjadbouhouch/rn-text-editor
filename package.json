@@ -1,5 +1,5 @@
 {
-  "name": "react-native-rn-text-editor",
+  "name": "rn-text-editor",
   "version": "0.1.0",
   "description": "The headless rich text editor framework for react-native.",
   "main": "lib/commonjs/index",
@@ -26,7 +26,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace react-native-rn-text-editor-example",
+    "example": "yarn workspace rn-text-editor-example",
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -41,14 +41,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amjadbouhouch/react-native-rn-text-editor.git"
+    "url": "git+https://github.com/amjadbouhouch/rn-text-editor.git"
   },
   "author": "Amjed Bouhouch <amjed@winshot.net> (https://github.com/amjadbouhouch)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/amjadbouhouch/react-native-rn-text-editor/issues"
+    "url": "https://github.com/amjadbouhouch/rn-text-editor/issues"
   },
-  "homepage": "https://github.com/amjadbouhouch/react-native-rn-text-editor#readme",
+  "homepage": "https://github.com/amjadbouhouch/rn-text-editor#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

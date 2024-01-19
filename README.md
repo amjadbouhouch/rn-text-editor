@@ -1,21 +1,76 @@
-# react-native-rn-text-editor
+# rn-text-editor (NOT STABLE!!!!!!!)
 
-The headless rich text editor framework for react-native.
+rn-text-editor - Inspired by [ProseMirror](https://prosemirror.net/) and [Tiptap](https://tiptap.dev/)
+
+`rn-text-editor` is an evolving and feature-rich text editor package for React Native that's currently under active development. This package offers a range of functionalities for creating and managing text content in your React Native applications. `While it's not stable yet`, we invite you to explore its capabilities, contribute to its improvement, and share your feedback with the community.
+
+## Features
+
+1.  Customizable: Tailor the text editor to suit your application's requirements with various configuration options.
+2. Rich Text Support: Easily incorporate rich text elements, such as bold and italic formatting, into your content.
 
 ## Installation
 
+To get started with rn-text-editor, install the package using npm or yarn:
 ```sh
-npm install react-native-rn-text-editor
+npm install rn-text-editor
+# or
+yarn add rn-text-editor
+
 ```
 
 ## Usage
 
+Explore the package in its current state and feel free to contribute to its development. Integration is straightforward and can be done as follows:
+
 ```js
-import { multiply } from 'react-native-rn-text-editor';
+import * as React from 'react';
+import { StyleSheet, View, TextInput } from 'react-native';
+import { useEditor, EditorContent } from 'rn-text-editor';
 
-// ...
+export default function App() {
+  const inputRef = React.useRef<TextInput>(null);
+  const editor = useEditor({
+    initialContent: [
+      {
+        id: '1',
+        type: 'paragraph',
+        content: [
+          {
+            id: '1.1d',
+            type: 'text',
+            text: 'Hello',
+          },
+          {
+            id: '1.2',
+            type: 'text',
+            marks: [
+              {
+                type: 'strong',
+              },
+            ],
+            text: 'Hello',
+          },
+        ],
+      },
+    ],
+  });
 
-const result = await multiply(3, 7);
+  return (
+    <View style={styles.container}>
+      <EditorContent editor={editor} inputRef={inputRef} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+});
+
 ```
 
 ## Contributing
