@@ -1,4 +1,4 @@
-import type { Command, RawCommands } from '../../types';
+import type { Command, RawCommands } from '../types';
 
 declare module 'rn-text-editor' {
   interface Commands<ReturnType> {

@@ -1,6 +1,6 @@
 import { Fragment, Node, ResolvedPos } from 'prosemirror-model';
 
-import type { Content, Range } from '../types';
+import type { Content, Range } from './types';
 import { Editor } from './Editor';
 
 export class NodePos {

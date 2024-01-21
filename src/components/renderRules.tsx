@@ -1,7 +1,7 @@
 import React from 'react';
 
 import TextNode from './TextNode';
-import type { JSONContent, TextContentType } from '../types';
+import type { JSONContent, TextContentType } from '../core/types';
 import ParagraphNode from './ParagraphNode';
 import { commonHelper } from '../utils';
 

@@ -9,7 +9,7 @@ import type {
   ChainedCommands,
   CommandProps,
   SingleCommands,
-} from '../types';
+} from './types';
 import { commonHelper, editorHelper } from '../utils';
 import type { Editor } from './Editor';
 
@@ -22,7 +22,8 @@ export class CommandManager {
 
   constructor(props: { editor: Editor; state?: EditorState }) {
     this.editor = props.editor;
-    // this.rawCommands = this.editor.
+    this.rawCommands = this.editor.extensionManager.commands;
+    this.customState = props.state;
   }
 
   get hasCustomState(): boolean {

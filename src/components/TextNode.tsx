@@ -1,6 +1,6 @@
 import React from 'react';
 import { Linking, Text } from 'react-native';
-import type { JSONContent } from '../types';
+import type { JSONContent } from '../core/types';
 
 const TextNode = (node: JSONContent) => {
   const isBold = node?.marks?.some((m) => m.type === 'bold');
@@ -17,6 +17,7 @@ const TextNode = (node: JSONContent) => {
 
     Linking.openURL(urlLinks.attrs!.href);
   };
+
   return (
     <Text
       onPress={urlLinks ? onPress : undefined}
@@ -27,7 +28,7 @@ const TextNode = (node: JSONContent) => {
           textDecorationLine: isStrike ? 'line-through' : undefined,
         },
         urlLinks && {
-          color: 'blue',
+          color: '#0000EE',
         },
         textStyle && { color: textStyle.attrs?.color },
         highlight && {

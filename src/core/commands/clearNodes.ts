@@ -1,5 +1,5 @@
 import { liftTarget } from 'prosemirror-transform';
-import type { RawCommands } from '../../types';
+import type { RawCommands } from '../types';
 
 declare module 'rn-text-editor' {
   interface Commands<ReturnType> {

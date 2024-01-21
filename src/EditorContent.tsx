@@ -8,7 +8,7 @@ import type {
 import { TextInput } from 'react-native';
 import renderRules from './components/renderRules';
 import { Editor } from './core/Editor';
-import type { JSONContent, TextContentType } from './types';
+import type { JSONContent, TextContentType } from './core/types';
 interface EditorContentProps
   extends Omit<TextInputProps, 'value' | 'multiline' | 'children'> {
   editor: Editor;
@@ -98,12 +98,12 @@ export class EditorContent extends React.PureComponent<
         ref={inputRef}
         multiline
         autoFocus
-        autoComplete="off"
+        // autoComplete="off"
         autoCorrect={false}
-        selectTextOnFocus={false}
+        // selectTextOnFocus={false}
         onKeyPress={this.onKeyPress.bind(this)}
         onSelectionChange={this.onSelectionChange.bind(this)}
-        autoCapitalize="none"
+        // autoCapitalize="none"
         spellCheck={false}
         {...rest}
       >

@@ -1,6 +1,18 @@
+import type {
+  Mark as ProseMirrorMark,
+  Node as ProseMirrorNode,
+} from 'prosemirror-model';
 import type { EditorState, Transaction } from 'prosemirror-state';
-import type { Editor } from './core';
-import type { Commands } from 'rn-text-editor';
+import type {
+  Commands,
+  ExtensionConfig,
+  MarkConfig,
+  NodeConfig,
+} from 'rn-text-editor';
+import type { Editor } from '.';
+import type { Extension } from './Extension';
+import type { Mark } from './Mark';
+import type { Node } from './Node';
 
 export type TextContentType = 'text' | 'paragraph';
 type TextContentMark = {
@@ -33,19 +45,20 @@ export type TextContent = {
 };
 
 export type JSONContent = {
-  type: TextContentType;
+  type?: string;
   attrs?: Record<string, any>;
   content?: JSONContent[];
   marks?: {
     type: string;
     attrs?: Record<string, any>;
-    user?: User;
     [key: string]: any;
   }[];
   text?: string;
   [key: string]: any;
 };
-export type Content = JSONContent | Array<JSONContent>;
+export type HTMLContent = string;
+
+export type Content = HTMLContent | JSONContent | JSONContent[] | null;
 export type FocusPosition = 'start' | 'end' | 'all' | number | boolean | null;
 export type Range = {
   from: number;
@@ -116,4 +129,78 @@ export type CommandProps = {
   state: EditorState;
   // view: EditorView;
   dispatch: ((args?: any) => any) | undefined;
+};
+
+export type ParentConfig<T> = Partial<{
+  [P in keyof T]: Required<T>[P] extends (...args: any) => any
+    ? (...args: Parameters<Required<T>[P]>) => ReturnType<Required<T>[P]>
+    : T[P];
+}>;
+
+export type Attribute = {
+  default: any;
+  rendered?: boolean;
+  renderHTML?: // | ((attributes: Record<string, any>) => Record<string, any> | null)
+  null;
+  parseHTML?: // ((element: HTMLElement) => any | null)
+  null;
+  keepOnSplit: boolean;
+  isRequired?: boolean;
+};
+
+export type GlobalAttributes = {
+  types: string[];
+  attributes: {
+    [key: string]: Attribute;
+  };
+}[];
+
+export type AnyConfig = ExtensionConfig | NodeConfig | MarkConfig;
+export type AnyExtension = Extension | Node | Mark;
+export type Extensions = AnyExtension[];
+export type EnableRules = (AnyExtension | string)[] | boolean;
+export type ExtendedRegExpMatchArray = RegExpMatchArray & {
+  data?: Record<string, any>;
+};
+
+export type Attributes = {
+  [key: string]: Attribute;
+};
+export type Primitive =
+  | null
+  | undefined
+  | string
+  | number
+  | boolean
+  | symbol
+  | bigint;
+
+export type MaybeReturnType<T> = T extends (...args: any) => any
+  ? ReturnType<T>
+  : T;
+export type MaybeThisParameterType<T> = Exclude<T, Primitive> extends (
+  ...args: any
+) => any
+  ? ThisParameterType<Exclude<T, Primitive>>
+  : any;
+export type RemoveThis<T> = T extends (...args: any) => any
+  ? (...args: Parameters<T>) => ReturnType<T>
+  : T;
+
+export type MarkRange = {
+  mark: ProseMirrorMark;
+  from: number;
+  to: number;
+};
+
+export type NodeRange = {
+  node: ProseMirrorNode;
+  from: number;
+  to: number;
+};
+
+export type ExtensionAttribute = {
+  type: string;
+  name: string;
+  attribute: Required<Attribute>;
 };
