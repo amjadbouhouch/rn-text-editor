@@ -8,7 +8,7 @@ import type {
 import { TextInput } from 'react-native';
 import renderRules from './components/renderRules';
 import { Editor } from './core/Editor';
-import type { JSONContent, TextContentType } from './core/types';
+import type { Content, JSONContent } from './core/types';
 interface EditorContentProps
   extends Omit<TextInputProps, 'value' | 'multiline' | 'children'> {
   editor: Editor;
@@ -47,7 +47,7 @@ export class EditorContent extends React.PureComponent<
     editor.commandManager.setSelection(selection.start, selection.end);
   }
 
-  getRenderNodeFunction(type: TextContentType) {
+  getRenderNodeFunction(type: string) {
     const { renderNodes = {} } = this.props;
     return renderNodes[type] || renderRules[type];
   }
@@ -62,7 +62,10 @@ export class EditorContent extends React.PureComponent<
     if (Array.isArray(node)) {
       return node.map((child, index) => this.renderNode(child, index));
     }
-
+    if (!node.type) {
+      console.warn(`Node without type: ${JSON.stringify(node)}`);
+      return null;
+    }
     const renderFunction = this.getRenderNodeFunction(node.type);
 
     if (!renderFunction) {
@@ -84,10 +87,43 @@ export class EditorContent extends React.PureComponent<
     };
     return newSelection;
   }
+
+  deleteBeforeCursor() {
+    const { editor } = this.props;
+    const selection = editor.state.selection;
+    // remove one character
+    if (selection.empty) {
+      return editor.commandManager.createChain().deleteBeforeCursor().run();
+    }
+    // try and remove the selected range
+    const { from, to } = selection;
+    const range = { from, to };
+    return editor.commandManager.createChain().deleteRange(range).run();
+  }
   onKeyPress({
     nativeEvent: { key },
   }: NativeSyntheticEvent<TextInputKeyPressEventData>) {
-    this.props.editor.commandManager.handleKeyPress(key);
+    if (key === 'Backspace') {
+      return this.deleteBeforeCursor();
+    }
+
+    const { editor } = this.props;
+    let content: Content = {
+      type: 'text',
+      text: '',
+    };
+    if (key === 'Enter') {
+      content.text = '\n';
+    } else {
+      content.text = key;
+    }
+    return (
+      editor.commandManager
+        .createChain(undefined, true)
+        // .focus()
+        .insertContent(content)
+        .run()
+    );
   }
   render(): React.ReactNode {
     const { inputRef, ...rest } = this.props;

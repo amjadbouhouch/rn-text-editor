@@ -1,6 +1,10 @@
 import { Fragment, Schema } from 'prosemirror-model';
-import { schema as prosSchema } from 'prosemirror-schema-basic';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { editorHelper } from '../utils';
+import { CommandManager } from './CommandManager';
+import { EventEmitter } from './EventEmitter';
+import { ExtensionManager } from './ExtensionManager';
+import * as extensions from './Extensions/index';
 import type {
   AnyExtension,
   ChainedCommands,
@@ -10,11 +14,6 @@ import type {
   JSONContent,
   SingleCommands,
 } from './types';
-import { editorHelper } from '../utils';
-import { CommandManager } from './CommandManager';
-import { EventEmitter } from './EventEmitter';
-import * as extensions from './Extensions/index';
-import { ExtensionManager } from './ExtensionManager';
 export type EditorProps = {
   extensions: Extensions;
   initialContent: JSONContent[];

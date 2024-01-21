@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, TextInput, Button } from 'react-native';
-import { useEditor, EditorContent, Bold, Commands } from 'rn-text-editor';
+import { useEditor, EditorContent, extensions } from 'rn-text-editor';
 import { commonHelper } from '../../src/utils';
 
 export default function App() {
@@ -84,9 +84,9 @@ export default function App() {
         ],
       },
     ],
-    extensions: [Commands, Bold],
+    extensions: [extensions.Commands, extensions.Bold],
     onUpdate(props) {
-      // console.log(JSON.stringify(props.editor.state.doc.content.toJSON()));
+      console.log(JSON.stringify(props.editor.state.doc.content.toJSON()));
     },
   });
   React.useEffect(() => {

@@ -6,7 +6,7 @@ import ParagraphNode from './ParagraphNode';
 import { commonHelper } from '../utils';
 
 const renderRules: Record<
-  TextContentType,
+  TextContentType | string,
   (
     node: JSONContent,
     index: number,

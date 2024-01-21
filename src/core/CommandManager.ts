@@ -1,8 +1,10 @@
 import {
+  TextSelection,
   Transaction,
   type EditorState,
-  TextSelection,
 } from 'prosemirror-state';
+import { editorHelper } from '../utils';
+import type { Editor } from './Editor';
 import type {
   AnyCommands,
   CanCommands,
@@ -10,8 +12,6 @@ import type {
   CommandProps,
   SingleCommands,
 } from './types';
-import { commonHelper, editorHelper } from '../utils';
-import type { Editor } from './Editor';
 
 export class CommandManager {
   editor: Editor;
@@ -171,14 +171,5 @@ export class CommandManager {
     return this.dispatch(newTransaction);
   };
 
-  handleKeyPress = (key: string) => {
-    const tr = this.editor.state.tr;
-    if (key === 'Enter') {
-      const paragraphNode = this.editor.schema.node('paragraph', {
-        id: commonHelper.generateId(),
-      });
-      tr.insert(this.editor.state.doc.content.size, paragraphNode);
-      return this.dispatch(tr);
-    }
-  };
+  handleKeyPress = (key: string) => {};
 }

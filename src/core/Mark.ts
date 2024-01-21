@@ -16,7 +16,7 @@ import type {
 import type { InputRule } from './InputRule';
 import type { Plugin, Transaction } from 'prosemirror-state';
 import { commonHelper, editorHelper } from '../utils';
-import type { MarkConfig } from 'rn-text-editor';
+import type { MarkConfig } from '.';
 
 declare module 'rn-text-editor' {
   export interface MarkConfig<Options = any, Storage = any> {

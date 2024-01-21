@@ -1,0 +1,68 @@
+import {
+  isTextSelection,
+  resolveFocusPosition,
+} from '../../utils/editorHelper';
+import type { FocusPosition, RawCommands } from '../types';
+
+declare module 'rn-text-editor' {
+  interface Commands<ReturnType> {
+    focus: {
+      /**
+       * Focus the editor at the given position.
+       */
+      focus: (
+        position?: FocusPosition,
+        options?: {
+          scrollIntoView?: boolean;
+        }
+      ) => ReturnType;
+    };
+  }
+}
+
+export const focus: RawCommands['focus'] =
+  (position = null, options = {}) =>
+  ({
+    editor,
+    // view,
+    tr,
+    dispatch,
+  }) => {
+    options = {
+      scrollIntoView: true,
+      ...options,
+    };
+
+    // if ((view.hasFocus() && position === null) || position === false) {
+    //   return true
+    // }
+
+    // we don’t try to resolve a NodeSelection or CellSelection
+    if (
+      dispatch &&
+      position === null &&
+      !isTextSelection(editor.state.selection)
+    ) {
+      return true;
+    }
+
+    // pass through tr.doc instead of editor.state.doc
+    // since transactions could change the editors state before this command has been run
+    const selection =
+      resolveFocusPosition(tr.doc, position) || editor.state.selection;
+    const isSameSelection = editor.state.selection.eq(selection);
+
+    if (dispatch) {
+      if (!isSameSelection) {
+        tr.setSelection(selection);
+      }
+
+      // `tr.setSelection` resets the stored marks
+      // so we’ll restore them if the selection is the same as before
+      if (isSameSelection && tr.storedMarks) {
+        tr.setStoredMarks(tr.storedMarks);
+      }
+    }
+
+    return true;
+  };
