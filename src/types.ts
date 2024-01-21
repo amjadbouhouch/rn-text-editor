@@ -1,5 +1,6 @@
-import type { Transaction } from 'prosemirror-state';
+import type { EditorState, Transaction } from 'prosemirror-state';
 import type { Editor } from './core';
+import type { Commands } from 'rn-text-editor';
 
 export type TextContentType = 'text' | 'paragraph';
 type TextContentMark = {
@@ -32,7 +33,6 @@ export type TextContent = {
 };
 
 export type JSONContent = {
-  id: string;
   type: TextContentType;
   attrs?: Record<string, any>;
   content?: JSONContent[];
@@ -62,3 +62,58 @@ export interface EditorEvents {
   blur: { editor: Editor; event: FocusEvent; transaction: Transaction };
   destroy: void;
 }
+export type Diff<T extends keyof any, U extends keyof any> = ({
+  [P in T]: P;
+} & {
+  [P in U]: never;
+} & { [x: string]: never })[T];
+
+export type Overwrite<T, U> = Pick<T, Diff<keyof T, keyof U>> & U;
+
+export type ValuesOf<T> = T[keyof T];
+
+//
+export type UnionToIntersection<U> = (
+  U extends any ? (k: U) => void : never
+) extends (k: infer I) => void
+  ? I
+  : never;
+
+export type Command = (props: CommandProps) => boolean;
+
+export type CommandSpec = (...args: any[]) => Command;
+export type AnyCommands = Record<string, (...args: any[]) => Command>;
+export type KeysWithTypeOf<T, Type> = {
+  [P in keyof T]: T[P] extends Type ? P : never;
+}[keyof T];
+
+export type UnionCommands<T = Command> = UnionToIntersection<
+  ValuesOf<Pick<Commands<T>, KeysWithTypeOf<Commands<T>, {}>>>
+>;
+
+export type RawCommands = {
+  [Item in keyof UnionCommands]: UnionCommands<Command>[Item];
+};
+
+export type SingleCommands = {
+  [Item in keyof UnionCommands]: UnionCommands<boolean>[Item];
+};
+
+export type ChainedCommands = {
+  [Item in keyof UnionCommands]: UnionCommands<ChainedCommands>[Item];
+} & {
+  run: () => boolean;
+};
+
+export type CanCommands = SingleCommands & { chain: () => ChainedCommands };
+
+export type CommandProps = {
+  editor: Editor;
+  tr: Transaction;
+  commands: SingleCommands;
+  can: () => CanCommands;
+  chain: () => ChainedCommands;
+  state: EditorState;
+  // view: EditorView;
+  dispatch: ((args?: any) => any) | undefined;
+};

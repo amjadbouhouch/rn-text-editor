@@ -2,22 +2,23 @@ import * as React from 'react';
 
 import { StyleSheet, View, TextInput } from 'react-native';
 import { useEditor, EditorContent } from 'rn-text-editor';
+import { commonHelper } from '../../src/utils';
 
 export default function App() {
   const inputRef = React.useRef<TextInput>(null);
   const editor = useEditor({
     initialContent: [
       {
-        id: '1',
+        attrs: {
+          id: `paragraph-${commonHelper.generateId()}`,
+        },
         type: 'paragraph',
         content: [
           {
-            id: '1.1d',
             type: 'text',
             text: 'Hello',
           },
           {
-            id: '1.2',
             type: 'text',
             marks: [
               {

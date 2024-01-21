@@ -3,6 +3,7 @@ import React from 'react';
 import TextNode from './TextNode';
 import type { JSONContent, TextContentType } from '../types';
 import ParagraphNode from './ParagraphNode';
+import { commonHelper } from '../utils';
 
 const renderRules: Record<
   TextContentType,
@@ -13,18 +14,13 @@ const renderRules: Record<
   ) => React.ReactNode
 > = {
   text: (node: JSONContent, index: number, children: React.ReactNode) => {
-    return (
-      <TextNode key={node.id} index={index} children={children} {...node} />
-    );
+    const key = node.attrs?.id || commonHelper.generateId();
+    return <TextNode key={key} index={index} children={children} {...node} />;
   },
   paragraph: (node: JSONContent, index: number, children: React.ReactNode) => {
+    const key = node.attrs?.id || commonHelper.generateId();
     return (
-      <ParagraphNode
-        key={node.id}
-        index={index}
-        children={children}
-        {...node}
-      />
+      <ParagraphNode key={key} index={index} children={children} {...node} />
     );
   },
 };

@@ -1,11 +1,11 @@
 import { Fragment, Schema } from 'prosemirror-model';
-import { marks, nodes } from 'prosemirror-schema-basic';
-import { EditorState, TextSelection } from 'prosemirror-state';
-import type { TextInputTextInputEventData } from 'react-native';
+import { marks } from 'prosemirror-schema-basic';
+import { EditorState, Transaction } from 'prosemirror-state';
 import type { EditorEvents, FocusPosition, JSONContent } from '../types';
 import { editorHelper } from '../utils';
 import { CommandManager } from './CommandManager';
 import { EventEmitter } from './EventEmitter';
+
 export type EditorProps = {
   initialContent: JSONContent[];
   focusPosition?: FocusPosition;
@@ -19,12 +19,12 @@ export type EditorProps = {
   onDestroy: (props: EditorEvents['destroy']) => void;
 };
 export class Editor extends EventEmitter<EditorEvents> {
-  private _schema!: Schema;
+  public schema!: Schema;
   public commandManager!: CommandManager;
   public state!: EditorState;
   public options: EditorProps = {
     initialContent: [],
-    focusPosition: null,
+    focusPosition: 'end',
     onBeforeCreate: () => null,
     onCreate: () => null,
     onUpdate: () => null,
@@ -39,15 +39,31 @@ export class Editor extends EventEmitter<EditorEvents> {
     this.setOptions(options);
     //
 
-    this._schema = new Schema({
-      nodes: nodes,
+    this.schema = new Schema({
+      nodes: {
+        doc: { content: 'block+' },
+        paragraph: {
+          content: 'inline*',
+          group: 'block',
+          attrs: { id: { default: null } },
+          parseDOM: [
+            {
+              tag: 'p',
+              // @ts-expect-error
+              getAttrs: (dom) => ({ id: dom.getAttribute('id') }),
+            },
+          ],
+          toDOM: (node) => ['p', { id: node.attrs.id }, 0],
+        },
+        text: { inline: true, group: 'inline' },
+      },
       marks: marks,
     });
     const { initialContent, focusPosition } = this.options;
     const parsedContent = Fragment.fromArray(
-      initialContent.map((item) => this._schema.nodeFromJSON(item))
+      initialContent.map((item) => this.schema.nodeFromJSON(item))
     );
-    const doc = this._schema.node('doc', null, parsedContent);
+    const doc = this.schema.node('doc', null, parsedContent);
 
     this.on('beforeCreate', this.options.onBeforeCreate);
     this.emit('beforeCreate', { editor: this });
@@ -61,7 +77,7 @@ export class Editor extends EventEmitter<EditorEvents> {
 
     const selection = editorHelper.resolveFocusPosition(doc, focusPosition);
     this.state = EditorState.create({
-      schema: this._schema,
+      schema: this.schema,
       doc: doc,
       selection: selection ?? undefined,
     });
@@ -71,49 +87,15 @@ export class Editor extends EventEmitter<EditorEvents> {
       this.emit('create', { editor: this });
     }, 0);
   }
-
+  dispatch(tr: Transaction) {
+    const newState = this.state.apply(tr);
+    this.state = newState;
+    this.emit('update', { editor: this, transaction: tr });
+  }
   public setOptions(options: Partial<EditorProps>) {
     this.options = { ...this.options, ...options };
   }
 
-  setSelection(start: number, end: number) {
-    const { tr } = this.state;
-
-    let resolvedStart = this.state.doc.resolve(start);
-
-    let resolvedEnd = this.state.doc.resolve(end);
-
-    if (resolvedStart && resolvedEnd) {
-      const transaction = tr.setSelection(
-        new TextSelection(resolvedStart, resolvedEnd)
-      );
-      this.state.apply(transaction);
-    } else {
-    }
-  }
-
-  onTextInputChange({ range, text }: TextInputTextInputEventData) {
-    const isDeleting = text === '';
-    const { tr } = this.state;
-    let resolvedStart = tr.doc.resolve(range.start);
-    let resolvedEnd = tr.doc.resolve(range.end);
-
-    if (isDeleting) {
-      if (resolvedStart && resolvedEnd) {
-        const transaction = tr.delete(resolvedStart.pos, resolvedEnd.pos);
-        this.state.apply(transaction);
-      }
-    } else {
-      if (resolvedStart && resolvedEnd) {
-        const transaction = tr.insertText(
-          text,
-          resolvedStart.pos,
-          resolvedEnd.pos
-        );
-        this.state.apply(transaction);
-      }
-    }
-  }
   contentAsJson() {
     return this.state.doc.content.toJSON() as JSONContent[] | JSONContent;
   }

@@ -46,3 +46,7 @@ export function deepClone(payload: object) {
 export function minMax(value = 0, min = 0, max = 0): number {
   return Math.min(Math.max(value, min), max);
 }
+
+// export function generateId() {
+//   return Math.random().toString(16).substring(2);
+// }

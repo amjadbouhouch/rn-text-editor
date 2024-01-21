@@ -4,6 +4,15 @@ rn-text-editor - Inspired by [ProseMirror](https://prosemirror.net/) and [Tiptap
 
 `rn-text-editor` is an evolving and feature-rich text editor package for React Native that's currently under active development. This package offers a range of functionalities for creating and managing text content in your React Native applications. `While it's not stable yet`, we invite you to explore its capabilities, contribute to its improvement, and share your feedback with the community.
 
+## TODO
+
+- [x] Setup a basic schema
+- [x] Handle cursor position (Selection)
+- [ ] handle onKeyPressed (insert new text or remove it based on the selection)
+- [ ] Menu actions
+- [ ] Plugins
+
+
 ## Features
 
 1.  Customizable: Tailor the text editor to suit your application's requirements with various configuration options.
