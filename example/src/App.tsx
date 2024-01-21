@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StyleSheet, View, TextInput, Button } from 'react-native';
 import { useEditor, EditorContent, extensions } from 'rn-text-editor';
 import { commonHelper } from '../../src/utils';
+import Menu from './Menu';
 
 export default function App() {
   const inputRef = React.useRef<TextInput>(null);
@@ -86,56 +87,23 @@ export default function App() {
     ],
     extensions: [extensions.Commands, extensions.Bold],
     onUpdate(props) {
-      console.log(JSON.stringify(props.editor.state.doc.content.toJSON()));
+      // console.log(JSON.stringify(props.editor.state.doc.content.toJSON()));
     },
   });
-  React.useEffect(() => {
-    // console.log(editor.isActive('bold'));
-    // console.log(typeof editor.commandManager.can().);
-  }, [editor]);
-  function setBold() {
-    if (editor.commandManager.createCan().toggleMark('bold')) {
-      editor.commandManager
-        .createChain(undefined, true)
-        .toggleMark('bold')
-        .run();
-    }
-  }
-  function selectAll() {
-    if (editor.commandManager.createCan().selectAll()) {
-      editor.commandManager.createChain(undefined, true).selectAll().run();
-    }
-  }
+
   return (
     <View style={styles.container}>
-      <EditorContent
-        editor={editor}
-        inputRef={inputRef}
-        style={{
-          paddingVertical: 10,
-          paddingHorizontal: 5,
-          backgroundColor: '#fff',
-          // gray
-          borderColor: '#ccc',
-          borderWidth: 1,
-          borderRadius: 5,
-        }}
-      />
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          marginTop: 10,
-        }}
-      >
-        <Button title="SelectAll" onPress={selectAll} />
-        <View
-          style={{
-            marginLeft: 10,
-          }}
-        >
-          <Button title="set bold" onPress={setBold} />
-        </View>
+      <View style={{ flex: 1 }} />
+      <View style={styles.editorContainer}>
+        <EditorContent
+          editor={editor}
+          placeholder="Write something..."
+          inputRef={inputRef}
+        />
+        <Menu
+          editor={editor}
+          // key={`menu-${editor.state.selection.from}-${editor.state.selection.to}`}
+        />
       </View>
     </View>
   );
@@ -145,7 +113,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 1,
+  },
+  editorContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 5,
+    borderTopEndRadius: 10,
+    borderTopStartRadius: 10,
+    // gray
+    borderColor: '#ccc',
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
+    // borderBottomWidth: 1,
+    borderRadius: 0,
   },
   box: {
     width: 60,
