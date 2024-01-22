@@ -1,6 +1,6 @@
 {
   "name": "rn-text-editor",
-  "version": "0.1.0",
+  "version": "0.2.0-beta.0",
   "description": "The headless rich text editor framework for react-native.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
