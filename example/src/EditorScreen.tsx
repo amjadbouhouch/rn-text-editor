@@ -7,7 +7,6 @@ import tw from './utils/tailwind';
 interface EditorScreenProps {}
 const EditorScreen = ({}: EditorScreenProps) => {
   const inputRef = React.useRef<TextInput>(null);
-  // const [__, setCounter] = React.useState(0);
   const editor = useEditor({
     initialContent: [
       {
@@ -42,7 +41,7 @@ const EditorScreen = ({}: EditorScreenProps) => {
         ],
       },
     ],
-    extensions: [extensions.Commands, extensions.Bold],
+    extensions: [extensions.Commands, extensions.Bold, extensions.Italic],
     onUpdate(props) {
       console.log(props.editor.getNativeText());
     },
@@ -71,25 +70,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 1,
   },
   editorContainer: {
-    paddingVertical: 20,
-    paddingHorizontal: 10,
+    paddingTop: 20,
+    paddingBottom: 10,
+    paddingHorizontal: 5,
     borderTopEndRadius: 15,
     borderTopStartRadius: 15,
     // gray
     borderColor: tw.color('gray-200'),
-    borderTopWidth: 2,
+    borderTopWidth: 1,
     borderRightWidth: 1,
     borderLeftWidth: 1,
-    // borderBottomWidth: 1,
-    borderRadius: 0,
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 1,
-      height: 1,
-    },
-    shadowOpacity: 0.17,
-    shadowRadius: 2.54,
-    elevation: 2,
   },
   box: {
     width: 60,

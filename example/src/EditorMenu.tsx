@@ -10,6 +10,7 @@ interface EditorMenuProps {
 const EditorMenu = ({ editor }: EditorMenuProps) => {
   const [_, setForceUpdate] = useState(false);
   useEffect(() => {
+    // force the ui to update when the editor updates
     editor.on('update', () => {
       setForceUpdate((prev) => !prev);
     });
@@ -24,6 +25,19 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
           editor.commandManager
             .createChain(undefined, true)
             .toggleMark('bold')
+            .run();
+        }
+      },
+    },
+    {
+      icon: 'format-italic',
+      isActive: editor.isActive('italic'),
+      disabled: !editor.commandManager.createCan().toggleMark('italic'),
+      onPress() {
+        if (editor.commandManager.createCan().toggleMark('italic')) {
+          editor.commandManager
+            .createChain(undefined, true)
+            .toggleMark('italic')
             .run();
         }
       },

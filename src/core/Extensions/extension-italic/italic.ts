@@ -2,36 +2,36 @@ import { mergeAttributes } from '../../../utils/mergeAttributes';
 import { Mark } from '../../Mark';
 import { markInputRule } from '../../inputRules/markInputRule';
 
-export interface BoldOptions {
+export interface ItalicOptions {
   HTMLAttributes: Record<string, any>;
 }
 
 declare module 'rn-text-editor' {
   interface Commands<ReturnType> {
-    bold: {
+    italic: {
       /**
-       * Set a bold mark
+       * Set an italic mark
        */
-      setBold: () => ReturnType;
+      setItalic: () => ReturnType;
       /**
-       * Toggle a bold mark
+       * Toggle an italic mark
        */
-      toggleBold: () => ReturnType;
+      toggleItalic: () => ReturnType;
       /**
-       * Unset a bold mark
+       * Unset an italic mark
        */
-      unsetBold: () => ReturnType;
+      unsetItalic: () => ReturnType;
     };
   }
 }
 
-const starInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/;
-const starPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g;
-const underscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/;
-const underscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g;
+const starInputRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))$/;
+const starPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g;
+const underscoreInputRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))$/;
+const underscorePasteRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))/g;
 
-export const Bold = Mark.create<BoldOptions>({
-  name: 'bold',
+export const Italic = Mark.create<ItalicOptions>({
+  name: 'italic',
 
   addOptions() {
     return {
@@ -58,7 +58,7 @@ export const Bold = Mark.create<BoldOptions>({
   // },
   renderHTML({ HTMLAttributes }) {
     return [
-      'strong',
+      'em',
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
       0,
     ];
@@ -69,17 +69,17 @@ export const Bold = Mark.create<BoldOptions>({
 
   addCommands() {
     return {
-      setBold:
+      setItalic:
         () =>
         ({ commands }) => {
           return commands.setMark(this.name);
         },
-      toggleBold:
+      toggleItalic:
         () =>
         ({ commands }) => {
           return commands.toggleMark(this.name);
         },
-      unsetBold:
+      unsetItalic:
         () =>
         ({ commands }) => {
           return commands.unsetMark(this.name);
@@ -87,12 +87,12 @@ export const Bold = Mark.create<BoldOptions>({
     };
   },
 
-  addKeyboardShortcuts() {
-    return {
-      'Mod-b': () => this.editor.commands.toggleBold(),
-      'Mod-B': () => this.editor.commands.toggleBold(),
-    };
-  },
+  // addKeyboardShortcuts() {
+  //   return {
+  //     'Mod-b': () => this.editor.commands.toggleBold(),
+  //     'Mod-B': () => this.editor.commands.toggleBold(),
+  //   };
+  // },
 
   addInputRules() {
     return [
