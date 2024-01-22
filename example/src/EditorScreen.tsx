@@ -41,7 +41,7 @@ const EditorScreen = ({}: EditorScreenProps) => {
         ],
       },
     ],
-    extensions: [extensions.Commands, extensions.Bold, extensions.Italic],
+    extensions: [extensions.EditorCommands, extensions.Bold, extensions.Italic],
     onUpdate(props) {
       console.log(props.editor.getNativeText());
     },

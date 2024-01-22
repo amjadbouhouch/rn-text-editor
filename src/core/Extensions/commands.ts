@@ -1,14 +1,14 @@
-import * as commands from '../commands';
+import * as editorCommands from '../commands';
 import { Extension } from '../Extension';
 
 // export * from '../commands';
 
-export const Commands = Extension.create({
+export const EditorCommands = Extension.create({
   name: 'commands',
 
   addCommands() {
     return {
-      ...commands,
+      ...editorCommands,
     };
   },
 });
