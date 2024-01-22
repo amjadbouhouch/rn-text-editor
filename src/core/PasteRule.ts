@@ -57,6 +57,7 @@ export class PasteRule {
   }
 }
 
+// @ts-ignore
 const _pasteRuleMatcherHandler = (
   text: string,
   find: PasteRuleFinder,

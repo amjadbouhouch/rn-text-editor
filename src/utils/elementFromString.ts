@@ -16,6 +16,7 @@ const removeWhitespaces = (node: HTMLElement) => {
 
 export function elementFromString(value: string): HTMLElement {
   // add a wrapper to preserve leading and trailing whitespace
+  // @ts-ignore
   const _ = `<body>${value}</body>`;
 
   // const html = new window.DOMParser().parseFromString(wrappedValue, 'text/html').body
