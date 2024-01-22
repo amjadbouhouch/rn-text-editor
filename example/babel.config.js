@@ -18,5 +18,12 @@ module.exports = function (api) {
         },
       ],
     ],
+    // react native paper & react-native-vector-icons
+    // https://callstack.github.io/react-native-paper/docs/guides/getting-started
+    env: {
+      production: {
+        plugins: ['react-native-paper/babel'],
+      },
+    },
   };
 };
