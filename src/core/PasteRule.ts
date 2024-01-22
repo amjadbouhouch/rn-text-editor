@@ -1,6 +1,6 @@
 import type { EditorState } from 'prosemirror-state';
 import { Plugin } from 'prosemirror-state';
-import { CommandManager } from './CommandManager';
+import { commonHelper } from '../utils';
 import { Editor } from './Editor';
 import type {
   CanCommands,
@@ -9,7 +9,6 @@ import type {
   Range,
   SingleCommands,
 } from './types';
-import { commonHelper } from '../utils';
 
 export type PasteRuleMatch = {
   index: number;
@@ -58,7 +57,7 @@ export class PasteRule {
   }
 }
 
-const pasteRuleMatcherHandler = (
+const _pasteRuleMatcherHandler = (
   text: string,
   find: PasteRuleFinder,
   event?: ClipboardEvent
@@ -94,78 +93,78 @@ const pasteRuleMatcherHandler = (
   });
 };
 
-function run(config: {
-  editor: Editor;
-  state: EditorState;
-  from: number;
-  to: number;
-  rule: PasteRule;
-  pasteEvent: ClipboardEvent;
-  dropEvent: DragEvent;
-}): boolean {
-  const { editor, state, from, to, rule, pasteEvent, dropEvent } = config;
+// function run(config: {
+//   editor: Editor;
+//   state: EditorState;
+//   from: number;
+//   to: number;
+//   rule: PasteRule;
+//   pasteEvent: ClipboardEvent;
+//   dropEvent: DragEvent;
+// }): boolean {
+//   const { editor, state, from, to, rule, pasteEvent, dropEvent } = config;
 
-  const { commands, chain, can } = new CommandManager({
-    editor,
-    state,
-  });
+//   const { commands, chain, can } = new CommandManager({
+//     editor,
+//     state,
+//   });
 
-  const handlers: (void | null)[] = [];
+//   const handlers: (void | null)[] = [];
 
-  state.doc.nodesBetween(from, to, (node, pos) => {
-    if (!node.isTextblock || node.type.spec.code) {
-      return;
-    }
+//   state.doc.nodesBetween(from, to, (node, pos) => {
+//     if (!node.isTextblock || node.type.spec.code) {
+//       return;
+//     }
 
-    const resolvedFrom = Math.max(from, pos);
-    const resolvedTo = Math.min(to, pos + node.content.size);
-    const textToMatch = node.textBetween(
-      resolvedFrom - pos,
-      resolvedTo - pos,
-      undefined,
-      '\ufffc'
-    );
+//     const resolvedFrom = Math.max(from, pos);
+//     const resolvedTo = Math.min(to, pos + node.content.size);
+//     const textToMatch = node.textBetween(
+//       resolvedFrom - pos,
+//       resolvedTo - pos,
+//       undefined,
+//       '\ufffc'
+//     );
 
-    const matches = pasteRuleMatcherHandler(textToMatch, rule.find, pasteEvent);
+//     const matches = pasteRuleMatcherHandler(textToMatch, rule.find, pasteEvent);
 
-    matches.forEach((match) => {
-      if (match.index === undefined) {
-        return;
-      }
+//     matches.forEach((match) => {
+//       if (match.index === undefined) {
+//         return;
+//       }
 
-      const start = resolvedFrom + match.index + 1;
-      const end = start + match[0].length;
-      const range = {
-        from: state.tr.mapping.map(start),
-        to: state.tr.mapping.map(end),
-      };
+//       const start = resolvedFrom + match.index + 1;
+//       const end = start + match[0].length;
+//       const range = {
+//         from: state.tr.mapping.map(start),
+//         to: state.tr.mapping.map(end),
+//       };
 
-      const handler = rule.handler({
-        state,
-        range,
-        match,
-        commands,
-        chain,
-        can,
-        pasteEvent,
-        dropEvent,
-      });
+//       const handler = rule.handler({
+//         state,
+//         range,
+//         match,
+//         commands,
+//         chain,
+//         can,
+//         pasteEvent,
+//         dropEvent,
+//       });
 
-      handlers.push(handler);
-    });
-  });
+//       handlers.push(handler);
+//     });
+//   });
 
-  const success = handlers.every((handler) => handler !== null);
+//   const success = handlers.every((handler) => handler !== null);
 
-  return success;
-}
+//   return success;
+// }
 
 /**
  * Create an paste rules plugin. When enabled, it will cause pasted
  * text that matches any of the given rules to trigger the rule’s
  * action.
  */
-export function pasteRulesPlugin(props: {
+export function pasteRulesPlugin(_: {
   editor: Editor;
   rules: PasteRule[];
 }): Plugin[] {

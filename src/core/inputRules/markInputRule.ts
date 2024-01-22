@@ -18,6 +18,7 @@ export function markInputRule(config: {
 }) {
   return new InputRule({
     find: config.find,
+    // @ts-ignore
     handler: ({ state, range, match }) => {
       const attributes = commonHelper.callOrReturn(
         config.getAttributes,

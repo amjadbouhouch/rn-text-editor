@@ -14,7 +14,7 @@ export function getRenderedAttributes(
           [item.name]: nodeOrMark.attrs[item.name],
         };
       }
-
+      // @ts-ignore
       return item.attribute.renderHTML(nodeOrMark.attrs) || {};
     })
     .reduce(

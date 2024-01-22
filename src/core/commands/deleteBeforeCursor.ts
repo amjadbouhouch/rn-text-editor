@@ -1,7 +1,6 @@
-import type { RawCommands } from '../types';
-import { deleteSelection as originalDeleteSelection } from 'prosemirror-commands';
 import { TextSelection } from 'prosemirror-state';
 import { minMax } from '../../utils/commonHelper';
+import type { RawCommands } from '../types';
 
 declare module 'rn-text-editor' {
   interface Commands<ReturnType> {

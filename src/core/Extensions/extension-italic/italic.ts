@@ -26,9 +26,9 @@ declare module 'rn-text-editor' {
 }
 
 const starInputRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))$/;
-const starPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g;
+// const starPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g;
 const underscoreInputRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))$/;
-const underscorePasteRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))/g;
+// const underscorePasteRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))/g;
 
 export const Italic = Mark.create<ItalicOptions>({
   name: 'italic',

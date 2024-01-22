@@ -201,7 +201,7 @@ export function inputRulesPlugin(props: {
     },
 
     props: {
-      handleTextInput(view, from, to, text) {
+      handleTextInput(_, from, to, text) {
         return run({
           editor,
           from,

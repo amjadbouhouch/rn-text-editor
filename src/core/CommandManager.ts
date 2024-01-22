@@ -171,5 +171,5 @@ export class CommandManager {
     return this.dispatch(newTransaction);
   };
 
-  handleKeyPress = (key: string) => {};
+  handleKeyPress = (_: string) => {};
 }
