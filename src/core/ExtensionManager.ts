@@ -246,11 +246,11 @@ export class ExtensionManager {
 
         const plugins: Plugin[] = [];
 
-        const _ = getExtensionField<AnyConfig['addKeyboardShortcuts']>(
-          extension,
-          'addKeyboardShortcuts',
-          context
-        );
+        // const _ = getExtensionField<AnyConfig['addKeyboardShortcuts']>(
+        //   extension,
+        //   'addKeyboardShortcuts',
+        //   context
+        // );
 
         let defaultBindings: Record<string, () => boolean> = {};
 
