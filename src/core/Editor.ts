@@ -1,5 +1,6 @@
-import { Fragment, Schema } from 'prosemirror-model';
+import { Schema } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { createDocument } from '../utils/createDocument';
 import { isActive, resolveFocusPosition } from '../utils/editorHelper';
 import { CommandManager } from './CommandManager';
 import { EventEmitter } from './EventEmitter';
@@ -15,7 +16,6 @@ import type {
   JSONContent,
   SingleCommands,
 } from './types';
-import { createDocument } from '../utils/createDocument';
 export type EditorProps = {
   extensions: Extensions;
   initialContent: Content;
