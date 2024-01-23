@@ -164,11 +164,15 @@ export class CommandManager {
     const tr = this.editor.state.tr;
     const newStart = start + 1;
     const newEnd = end ? end + 1 : undefined;
-    const newTransaction = tr.setSelection(
-      TextSelection.create(this.state.doc, newStart, newEnd)
-    );
+    try {
+      const newTransaction = tr.setSelection(
+        TextSelection.create(this.state.doc, newStart, newEnd)
+      );
 
-    return this.dispatch(newTransaction);
+      return this.dispatch(newTransaction);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   handleKeyPress = (_: string) => {};

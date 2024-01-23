@@ -117,13 +117,11 @@ export class EditorContent extends React.PureComponent<
     } else {
       content.text = key;
     }
-    return (
-      editor.commandManager
-        .createChain(undefined, true)
-        // .focus()
-        .insertContent(content)
-        .run()
-    );
+    return editor.commandManager
+      .createChain(undefined, true)
+      .focus()
+      .insertContent(content)
+      .run();
   }
   render(): React.ReactNode {
     const { inputRef, ...rest } = this.props;
@@ -141,6 +139,9 @@ export class EditorContent extends React.PureComponent<
         onSelectionChange={this.onSelectionChange.bind(this)}
         // autoCapitalize="none"
         spellCheck={false}
+        onChange={({ nativeEvent: { eventCount, target, text } }) => {
+          console.log('text changed!!', { eventCount, target, text });
+        }}
         {...rest}
       >
         {renderedNode}

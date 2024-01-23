@@ -151,3 +151,7 @@ export function objectIncludes(
 export function isEmptyObject(value = {}): boolean {
   return Object.keys(value).length === 0 && value.constructor === Object;
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

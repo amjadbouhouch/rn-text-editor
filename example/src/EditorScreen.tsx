@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import { EditorContent, extensions, useEditor } from 'rn-text-editor';
-import { commonHelper } from '../../src/utils';
 import Menu from './EditorMenu';
 import tw from './utils/tailwind';
 interface EditorScreenProps {}
@@ -11,7 +10,7 @@ const EditorScreen = ({}: EditorScreenProps) => {
     initialContent: [
       {
         attrs: {
-          id: `paragraph-${commonHelper.generateId()}`,
+          id: `1`,
         },
         type: 'paragraph',
         content: [
@@ -31,11 +30,15 @@ const EditorScreen = ({}: EditorScreenProps) => {
               },
             ],
             type: 'text',
-            text: '@ChatLover21',
-            // content: [],
+            text: 'ChatLover21',
           },
           {
             type: 'text',
+            marks: [
+              {
+                type: 'highlight',
+              },
+            ],
             text: ", your curiosity fuels the conversation! What's on your mind today?",
           },
         ],
@@ -43,7 +46,7 @@ const EditorScreen = ({}: EditorScreenProps) => {
     ],
     extensions: [extensions.EditorCommands, extensions.Bold, extensions.Italic],
     onUpdate(props) {
-      console.log(props.editor.getNativeText());
+      console.log(props.editor.contentAsJson());
     },
   });
   return (
@@ -55,7 +58,7 @@ const EditorScreen = ({}: EditorScreenProps) => {
           placeholder="Write something..."
           inputRef={inputRef}
           autoFocus
-          style={tw`pl-2`}
+          style={tw`pl-2 text-base`}
         />
         <Menu editor={editor} />
       </View>

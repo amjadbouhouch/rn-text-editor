@@ -6,7 +6,7 @@ interface MenuButtonProps extends IconButtonProps {
 const MenuButton = ({ isActive, ...props }: MenuButtonProps) => {
   return (
     <IconButton
-      size={20}
+      size={18}
       mode={isActive ? 'contained' : 'outlined'}
       {...props}
     />

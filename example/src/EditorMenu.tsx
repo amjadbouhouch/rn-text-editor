@@ -9,9 +9,10 @@ interface EditorMenuProps {
 }
 const EditorMenu = ({ editor }: EditorMenuProps) => {
   const [_, setForceUpdate] = useState(false);
+  const send = () => {};
   useEffect(() => {
     // force the ui to update when the editor updates
-    editor.on('update', () => {
+    editor.on('update', (props) => {
       setForceUpdate((prev) => !prev);
     });
   }, []);
@@ -58,21 +59,32 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
   ];
 
   return (
-    <View style={tw`flex flex-row items-center justify-start`}>
-      {actions.map((action, index) => (
-        <Fragment key={index}>
-          <MenuButton
-            key={action.icon}
-            icon={action.icon}
-            isActive={action.isActive}
-            disabled={action.disabled}
-            onPress={action.onPress}
-          />
-          {index < actions.length - 1 && (
-            <Divider style={tw`w-0.5 bg-gray-300 h-[50%]`} />
-          )}
-        </Fragment>
-      ))}
+    <View style={tw`flex flex-row justify-between`}>
+      <View style={tw`flex flex-row items-center justify-start flex-1`}>
+        {actions.map((action, index) => (
+          <Fragment key={index}>
+            <MenuButton
+              key={action.icon}
+              icon={action.icon}
+              isActive={action.isActive}
+              disabled={action.disabled}
+              onPress={action.onPress}
+            />
+            {index < actions.length - 1 && (
+              <Divider style={tw`w-0.5 bg-gray-400 h-[40%]`} />
+            )}
+          </Fragment>
+        ))}
+      </View>
+      <MenuButton
+        icon={'send'}
+        mode="contained-tonal"
+        onPress={send}
+        size={18}
+        // isActive={action.isActive}
+        // disabled={action.disabled}
+        // onPress={action.onPress}
+      />
     </View>
   );
 };
