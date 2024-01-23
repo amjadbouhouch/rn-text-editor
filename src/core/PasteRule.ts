@@ -1,6 +1,5 @@
 import type { EditorState } from 'prosemirror-state';
 import { Plugin } from 'prosemirror-state';
-import { commonHelper } from '../utils';
 import { Editor } from './Editor';
 import type {
   CanCommands,
@@ -9,6 +8,7 @@ import type {
   Range,
   SingleCommands,
 } from './types';
+import { isRegExp } from '../utils/commonHelper';
 
 export type PasteRuleMatch = {
   index: number;
@@ -63,7 +63,7 @@ const _pasteRuleMatcherHandler = (
   find: PasteRuleFinder,
   event?: ClipboardEvent
 ): ExtendedRegExpMatchArray[] => {
-  if (commonHelper.isRegExp(find)) {
+  if (isRegExp(find)) {
     return [...text.matchAll(find)];
   }
 

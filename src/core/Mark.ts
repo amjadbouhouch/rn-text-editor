@@ -4,7 +4,10 @@ import type {
   MarkType,
   Mark as ProseMirrorMark,
 } from 'prosemirror-model';
+import type { Plugin, Transaction } from 'prosemirror-state';
+import type { MarkConfig } from '.';
 import type { Editor } from './Editor';
+import type { InputRule } from './InputRule';
 import type {
   AnyConfig,
   Attributes,
@@ -13,10 +16,8 @@ import type {
   ParentConfig,
   RawCommands,
 } from './types';
-import type { InputRule } from './InputRule';
-import type { Plugin, Transaction } from 'prosemirror-state';
-import { commonHelper, editorHelper } from '../utils';
-import type { MarkConfig } from '.';
+import { getExtensionField } from '../utils/getExtensionField';
+import { callOrReturn, mergeDeep } from '../utils/commonHelper';
 
 declare module 'rn-text-editor' {
   export interface MarkConfig<Options = any, Storage = any> {
@@ -464,27 +465,19 @@ export class Mark<Options = any, Storage = any> {
     this.options = this.config.defaultOptions;
 
     if (this.config.addOptions) {
-      this.options = commonHelper.callOrReturn(
-        editorHelper.getExtensionField<AnyConfig['addOptions']>(
-          this,
-          'addOptions',
-          {
-            name: this.name,
-          }
-        )
+      this.options = callOrReturn(
+        getExtensionField<AnyConfig['addOptions']>(this, 'addOptions', {
+          name: this.name,
+        })
       );
     }
 
     this.storage =
-      commonHelper.callOrReturn(
-        editorHelper.getExtensionField<AnyConfig['addStorage']>(
-          this,
-          'addStorage',
-          {
-            name: this.name,
-            options: this.options,
-          }
-        )
+      callOrReturn(
+        getExtensionField<AnyConfig['addStorage']>(this, 'addStorage', {
+          name: this.name,
+          options: this.options,
+        })
       ) || {};
   }
 
@@ -497,20 +490,16 @@ export class Mark<Options = any, Storage = any> {
     // with different calls of `configure`
     const extension = this.extend();
 
-    extension.options = commonHelper.mergeDeep(
+    extension.options = mergeDeep(
       this.options as Record<string, any>,
       options
     ) as Options;
 
-    extension.storage = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addStorage']>(
-        extension,
-        'addStorage',
-        {
-          name: extension.name,
-          options: extension.options,
-        }
-      )
+    extension.storage = callOrReturn(
+      getExtensionField<AnyConfig['addStorage']>(extension, 'addStorage', {
+        name: extension.name,
+        options: extension.options,
+      })
     );
 
     return extension;
@@ -538,25 +527,17 @@ export class Mark<Options = any, Storage = any> {
       );
     }
 
-    extension.options = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addOptions']>(
-        extension,
-        'addOptions',
-        {
-          name: extension.name,
-        }
-      )
+    extension.options = callOrReturn(
+      getExtensionField<AnyConfig['addOptions']>(extension, 'addOptions', {
+        name: extension.name,
+      })
     );
 
-    extension.storage = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addStorage']>(
-        extension,
-        'addStorage',
-        {
-          name: extension.name,
-          options: extension.options,
-        }
-      )
+    extension.storage = callOrReturn(
+      getExtensionField<AnyConfig['addStorage']>(extension, 'addStorage', {
+        name: extension.name,
+        options: extension.options,
+      })
     );
 
     return extension;

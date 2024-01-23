@@ -1,6 +1,6 @@
 import type { MarkType } from 'prosemirror-model';
 import type { RawCommands } from '../types';
-import { editorHelper } from '../../utils';
+import { getMarkRange, getMarkType } from '../../utils/editorHelper';
 
 declare module 'rn-text-editor' {
   interface Commands<ReturnType> {
@@ -26,7 +26,7 @@ export const unsetMark: RawCommands['unsetMark'] =
   ({ tr, state, dispatch }) => {
     const { extendEmptyMarkRange = false } = options;
     const { selection } = tr;
-    const type = editorHelper.getMarkType(typeOrName, state.schema);
+    const type = getMarkType(typeOrName, state.schema);
     const { $from, empty, ranges } = selection;
 
     if (!dispatch) {
@@ -36,7 +36,7 @@ export const unsetMark: RawCommands['unsetMark'] =
     if (empty && extendEmptyMarkRange) {
       let { from, to } = selection;
       const attrs = $from.marks().find((mark) => mark.type === type)?.attrs;
-      const range = editorHelper.getMarkRange($from, type, attrs);
+      const range = getMarkRange($from, type, attrs);
 
       if (range) {
         from = range.from;

@@ -1,3 +1,9 @@
-export * from './commands';
-export * from './extension-bold';
-export * from './extension-italic';
+import { Bold } from './extension-bold';
+import { EditorCommands } from './commands';
+import { Italic } from './extension-italic';
+
+export const extensions = {
+  Bold,
+  EditorCommands,
+  Italic,
+};

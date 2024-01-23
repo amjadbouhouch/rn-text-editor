@@ -7,7 +7,7 @@ import type {
   Extensions,
   GlobalAttributes,
 } from '../core/types';
-import { getExtensionField } from './editorHelper';
+import { getExtensionField } from './getExtensionField';
 import { splitExtensions } from './splitExtensions';
 
 /**

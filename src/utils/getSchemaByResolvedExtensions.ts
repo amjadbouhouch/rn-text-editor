@@ -4,9 +4,9 @@ import type { AnyConfig, Extensions } from '../core/types';
 import { callOrReturn, isEmptyObject } from './commonHelper';
 import { getAttributesFromExtensions } from './getAttributesFromExtensions';
 import { splitExtensions } from './splitExtensions';
-import { getExtensionField } from './editorHelper';
 import { injectExtensionAttributesToParseRule } from './injectExtensionAttributesToParseRule';
 import { getRenderedAttributes } from './getRenderedAttributes';
+import { getExtensionField } from './getExtensionField';
 
 function cleanUpSchemaItem<T>(data: T) {
   return Object.fromEntries(

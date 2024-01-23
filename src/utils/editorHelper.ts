@@ -1,29 +1,21 @@
 import {
+  Mark,
   MarkType,
-  Node as ProseMirrorNode,
   NodeType,
+  Mark as ProseMirrorMark,
+  Node as ProseMirrorNode,
   ResolvedPos,
   Schema,
-  Mark as ProseMirrorMark,
-  Mark,
 } from 'prosemirror-model';
 // import type { Node } from "../core/Node";
-import type {
-  AnyExtension,
-  FocusPosition,
-  MarkRange,
-  MaybeThisParameterType,
-  NodeRange,
-  Range,
-  RemoveThis,
-} from '../core/types';
 import {
   EditorState,
   Selection,
   TextSelection,
   Transaction,
 } from 'prosemirror-state';
-import { commonHelper } from '.';
+import type { FocusPosition, MarkRange, NodeRange, Range } from '../core/types';
+import { minMax, objectIncludes } from './commonHelper';
 
 export function resolveFocusPosition(
   doc: ProseMirrorNode,
@@ -50,15 +42,15 @@ export function resolveFocusPosition(
   if (position === 'all') {
     return TextSelection.create(
       doc,
-      commonHelper.minMax(0, minPos, maxPos),
-      commonHelper.minMax(doc.content.size, minPos, maxPos)
+      minMax(0, minPos, maxPos),
+      minMax(doc.content.size, minPos, maxPos)
     );
   }
 
   return TextSelection.create(
     doc,
-    commonHelper.minMax(position, minPos, maxPos),
-    commonHelper.minMax(position, minPos, maxPos)
+    minMax(position, minPos, maxPos),
+    minMax(position, minPos, maxPos)
   );
 }
 export function isOutOfRange(
@@ -138,29 +130,6 @@ export const getTextContentFromNodes = ($from: ResolvedPos, maxMatch = 500) => {
   return textBefore;
 };
 
-export function getExtensionField<T = any>(
-  extension: AnyExtension,
-  field: string,
-  context?: Omit<MaybeThisParameterType<T>, 'parent'>
-): RemoveThis<T> {
-  if (extension.config[field] === undefined && extension.parent) {
-    return getExtensionField(extension.parent, field, context);
-  }
-
-  if (typeof extension.config[field] === 'function') {
-    const value = extension.config[field].bind({
-      ...context,
-      parent: extension.parent
-        ? getExtensionField(extension.parent, field, context)
-        : null,
-    });
-
-    return value;
-  }
-
-  return extension.config[field];
-}
-
 export function getNodeType(
   nameOrType: string | NodeType,
   schema: Schema
@@ -213,7 +182,7 @@ export function isNodeActive(
       return type.name === nodeRange.node.type.name;
     })
     .filter((nodeRange) =>
-      commonHelper.objectIncludes(nodeRange.node.attrs, attributes, {
+      objectIncludes(nodeRange.node.attrs, attributes, {
         strict: false,
       })
     );
@@ -265,7 +234,7 @@ export function isMarkActive(
         return type.name === mark.type.name;
       })
       .find((mark) =>
-        commonHelper.objectIncludes(mark.attrs, attributes, { strict: false })
+        objectIncludes(mark.attrs, attributes, { strict: false })
       );
   }
 
@@ -311,7 +280,7 @@ export function isMarkActive(
       return type.name === markRange.mark.type.name;
     })
     .filter((markRange) =>
-      commonHelper.objectIncludes(markRange.mark.attrs, attributes, {
+      objectIncludes(markRange.mark.attrs, attributes, {
         strict: false,
       })
     )
@@ -382,9 +351,7 @@ function findMarkInSet(
   attributes: Record<string, any> = {}
 ): ProseMirrorMark | undefined {
   return marks.find((item) => {
-    return (
-      item.type === type && commonHelper.objectIncludes(item.attrs, attributes)
-    );
+    return item.type === type && objectIncludes(item.attrs, attributes);
   });
 }
 

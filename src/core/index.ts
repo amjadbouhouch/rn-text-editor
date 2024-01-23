@@ -1,6 +1,6 @@
 export * from './CommandManager';
 export * from './Editor';
-export * as extensions from './Extensions';
+export * from './Extensions';
 
 export interface Commands<ReturnType = any> {}
 export interface ExtensionConfig<Options = any, Storage = any> {}

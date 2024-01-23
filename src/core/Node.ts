@@ -1,5 +1,6 @@
 import type { NodeSpec, NodeType } from 'prosemirror-model';
 import type { Plugin, Transaction } from 'prosemirror-state';
+import type { NodeConfig } from 'rn-text-editor';
 import type { Editor } from '.';
 import type { InputRule } from './InputRule';
 import type {
@@ -10,8 +11,8 @@ import type {
   ParentConfig,
   RawCommands,
 } from './types';
-import type { NodeConfig } from 'rn-text-editor';
-import { commonHelper, editorHelper } from '../utils';
+import { callOrReturn, mergeDeep } from '../utils/commonHelper';
+import { getExtensionField } from '../utils/getExtensionField';
 
 declare module 'rn-text-editor' {
   interface NodeConfig<Options = any, Storage = any> {
@@ -562,27 +563,19 @@ export class Node<Options = any, Storage = any> {
     this.options = this.config.defaultOptions;
 
     if (this.config.addOptions) {
-      this.options = commonHelper.callOrReturn(
-        editorHelper.getExtensionField<AnyConfig['addOptions']>(
-          this,
-          'addOptions',
-          {
-            name: this.name,
-          }
-        )
+      this.options = callOrReturn(
+        getExtensionField<AnyConfig['addOptions']>(this, 'addOptions', {
+          name: this.name,
+        })
       );
     }
 
     this.storage =
-      commonHelper.callOrReturn(
-        editorHelper.getExtensionField<AnyConfig['addStorage']>(
-          this,
-          'addStorage',
-          {
-            name: this.name,
-            options: this.options,
-          }
-        )
+      callOrReturn(
+        getExtensionField<AnyConfig['addStorage']>(this, 'addStorage', {
+          name: this.name,
+          options: this.options,
+        })
       ) || {};
   }
 
@@ -595,20 +588,16 @@ export class Node<Options = any, Storage = any> {
     // with different calls of `configure`
     const extension = this.extend();
 
-    extension.options = commonHelper.mergeDeep(
+    extension.options = mergeDeep(
       this.options as Record<string, any>,
       options
     ) as Options;
 
-    extension.storage = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addStorage']>(
-        extension,
-        'addStorage',
-        {
-          name: extension.name,
-          options: extension.options,
-        }
-      )
+    extension.storage = callOrReturn(
+      getExtensionField<AnyConfig['addStorage']>(extension, 'addStorage', {
+        name: extension.name,
+        options: extension.options,
+      })
     );
 
     return extension;
@@ -636,25 +625,17 @@ export class Node<Options = any, Storage = any> {
       );
     }
 
-    extension.options = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addOptions']>(
-        extension,
-        'addOptions',
-        {
-          name: extension.name,
-        }
-      )
+    extension.options = callOrReturn(
+      getExtensionField<AnyConfig['addOptions']>(extension, 'addOptions', {
+        name: extension.name,
+      })
     );
 
-    extension.storage = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addStorage']>(
-        extension,
-        'addStorage',
-        {
-          name: extension.name,
-          options: extension.options,
-        }
-      )
+    extension.storage = callOrReturn(
+      getExtensionField<AnyConfig['addStorage']>(extension, 'addStorage', {
+        name: extension.name,
+        options: extension.options,
+      })
     );
 
     return extension;

@@ -1,6 +1,10 @@
 import type { EditorState } from 'prosemirror-state';
 import { Plugin } from 'prosemirror-state';
-import { commonHelper, editorHelper } from '../utils';
+import { isRegExp } from '../utils/commonHelper';
+import {
+  createChainableState,
+  getTextContentFromNodes,
+} from '../utils/editorHelper';
 import { CommandManager } from './CommandManager';
 import { Editor } from './Editor';
 import type {
@@ -55,7 +59,7 @@ const inputRuleMatcherHandler = (
   text: string,
   find: InputRuleFinder
 ): ExtendedRegExpMatchArray | null => {
-  if (commonHelper.isRegExp(find)) {
+  if (isRegExp(find)) {
     return find.exec(text);
   }
 
@@ -115,7 +119,7 @@ function run(config: {
 
   let matched = false;
 
-  const textBefore = editorHelper.getTextContentFromNodes($from) + text;
+  const textBefore = getTextContentFromNodes($from) + text;
 
   rules.forEach((rule) => {
     if (matched) {
@@ -129,7 +133,7 @@ function run(config: {
     }
 
     const tr = editor.state.tr;
-    const state = editorHelper.createChainableState({
+    const state = createChainableState({
       state: editor.state,
       transaction: tr,
     });

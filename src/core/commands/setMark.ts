@@ -1,7 +1,11 @@
 import type { MarkType, ResolvedPos } from 'prosemirror-model';
 import type { EditorState, Transaction } from 'prosemirror-state';
-import { editorHelper } from '../../utils';
 import type { RawCommands } from '../types';
+import {
+  getMarkAttributes,
+  getMarkType,
+  isTextSelection,
+} from '../../utils/editorHelper';
 
 declare module 'rn-text-editor' {
   interface Commands<ReturnType> {
@@ -25,7 +29,7 @@ function canSetMark(
   const { selection } = tr;
   let cursor: ResolvedPos | null = null;
 
-  if (editorHelper.isTextSelection(selection)) {
+  if (isTextSelection(selection)) {
     cursor = selection.$cursor;
   }
 
@@ -74,10 +78,10 @@ export const setMark: RawCommands['setMark'] =
   ({ tr, state, dispatch }) => {
     const { selection } = tr;
     const { empty, ranges } = selection;
-    const type = editorHelper.getMarkType(typeOrName, state.schema);
+    const type = getMarkType(typeOrName, state.schema);
     if (dispatch) {
       if (empty) {
-        const oldAttributes = editorHelper.getMarkAttributes(state, type);
+        const oldAttributes = getMarkAttributes(state, type);
 
         tr.addStoredMark(
           type.create({

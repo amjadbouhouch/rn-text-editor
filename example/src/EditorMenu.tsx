@@ -12,7 +12,7 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
   const send = () => {};
   useEffect(() => {
     // force the ui to update when the editor updates
-    editor.on('update', (props) => {
+    editor.on('update', () => {
       setForceUpdate((prev) => !prev);
     });
   }, []);

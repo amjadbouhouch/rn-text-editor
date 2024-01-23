@@ -3,7 +3,6 @@ import {
   Transaction,
   type EditorState,
 } from 'prosemirror-state';
-import { editorHelper } from '../utils';
 import type { Editor } from './Editor';
 import type {
   AnyCommands,
@@ -12,6 +11,8 @@ import type {
   CommandProps,
   SingleCommands,
 } from './types';
+import { minMax } from '../utils/commonHelper';
+import { createChainableState } from '../utils/editorHelper';
 
 export class CommandManager {
   editor: Editor;
@@ -142,7 +143,7 @@ export class CommandManager {
       tr,
       editor,
       // view,
-      state: editorHelper.createChainableState({
+      state: createChainableState({
         state,
         transaction: tr,
       }),
@@ -161,18 +162,25 @@ export class CommandManager {
     return props;
   }
   setSelection = (start: number, end?: number) => {
+    console.log(start);
     const tr = this.editor.state.tr;
-    const newStart = start + 1;
-    const newEnd = end ? end + 1 : undefined;
-    try {
-      const newTransaction = tr.setSelection(
-        TextSelection.create(this.state.doc, newStart, newEnd)
-      );
+    const doc = this.state.doc;
+    /**
+     *
+     * MinMax to avoid out of bounds of the editor
+     *
+     * + 1 because react native selection starts from 0
+     *
+     */
+    const newStart = minMax(start + 1, 0, doc.content.size);
 
-      return this.dispatch(newTransaction);
-    } catch (error) {
-      console.error(error);
-    }
+    const newEnd = end ? minMax(end + 1, 0, doc.content.size) : undefined;
+
+    const newTransaction = tr.setSelection(
+      TextSelection.create(this.state.doc, newStart, newEnd)
+    );
+
+    return this.dispatch(newTransaction);
   };
 
   handleKeyPress = (_: string) => {};

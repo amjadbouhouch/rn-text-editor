@@ -1,7 +1,8 @@
 import type { MarkType } from 'prosemirror-model';
 import { InputRule, type InputRuleFinder } from '../InputRule';
 import type { ExtendedRegExpMatchArray } from '../types';
-import { commonHelper, editorHelper } from '../../utils';
+import { callOrReturn } from '../../utils/commonHelper';
+import { getMarksBetween } from '../../utils/editorHelper';
 
 /**
  * Build an input rule that adds a mark when the
@@ -20,11 +21,7 @@ export function markInputRule(config: {
     find: config.find,
     // @ts-ignore
     handler: ({ state, range, match }) => {
-      const attributes = commonHelper.callOrReturn(
-        config.getAttributes,
-        undefined,
-        match
-      );
+      const attributes = callOrReturn(config.getAttributes, undefined, match);
 
       if (attributes === false || attributes === null) {
         return null;
@@ -39,8 +36,7 @@ export function markInputRule(config: {
         const textStart = range.from + fullMatch.indexOf(captureGroup);
         const textEnd = textStart + captureGroup.length;
 
-        const excludedMarks = editorHelper
-          .getMarksBetween(range.from, range.to, state.doc)
+        const excludedMarks = getMarksBetween(range.from, range.to, state.doc)
           .filter((item) => {
             // @ts-ignore
             const excluded = item.mark.type.excluded as MarkType[];

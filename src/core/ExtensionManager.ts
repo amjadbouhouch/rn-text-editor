@@ -1,7 +1,6 @@
 import type { Schema } from 'prosemirror-model';
 import type { Plugin } from 'prosemirror-state';
 import { callOrReturn } from '../utils/commonHelper';
-import { getExtensionField } from '../utils/editorHelper';
 import { findDuplicates } from '../utils/findDuplicates';
 import { getAttributesFromExtensions } from '../utils/getAttributesFromExtensions';
 import { getSchemaTypeByName } from '../utils/getSchemaTypeByName';
@@ -11,6 +10,7 @@ import { inputRulesPlugin } from './InputRule';
 import { Mark } from './Mark';
 import { pasteRulesPlugin } from './PasteRule';
 import type { AnyConfig, Extensions, RawCommands } from './types';
+import { getExtensionField } from '../utils/getExtensionField';
 
 export class ExtensionManager {
   editor: Editor;

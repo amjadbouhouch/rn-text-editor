@@ -44,6 +44,7 @@ const EditorScreen = ({}: EditorScreenProps) => {
         ],
       },
     ],
+
     extensions: [extensions.EditorCommands, extensions.Bold, extensions.Italic],
     onUpdate(props) {
       console.log(props.editor.contentAsJson());

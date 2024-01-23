@@ -1,9 +1,9 @@
 import React from 'react';
 
-import TextNode from './TextNode';
 import type { JSONContent, TextContentType } from '../core/types';
+import { generateId } from '../utils/commonHelper';
 import ParagraphNode from './ParagraphNode';
-import { commonHelper } from '../utils';
+import TextNode from './TextNode';
 
 const renderRules: Record<
   TextContentType | string,
@@ -14,11 +14,11 @@ const renderRules: Record<
   ) => React.ReactNode
 > = {
   text: (node: JSONContent, index: number, children: React.ReactNode) => {
-    const key = node.attrs?.id || commonHelper.generateId();
+    const key = node.attrs?.id || generateId();
     return <TextNode key={key} index={index} children={children} {...node} />;
   },
   paragraph: (node: JSONContent, index: number, children: React.ReactNode) => {
-    const key = node.attrs?.id || commonHelper.generateId();
+    const key = node.attrs?.id || generateId();
     return (
       <ParagraphNode key={key} index={index} children={children} {...node} />
     );

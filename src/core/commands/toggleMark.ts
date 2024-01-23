@@ -1,6 +1,6 @@
 import type { MarkType } from 'prosemirror-model';
 import type { RawCommands } from '../types';
-import { editorHelper } from '../../utils';
+import { getMarkType, isMarkActive } from '../../utils/editorHelper';
 
 declare module 'rn-text-editor' {
   interface Commands<ReturnType> {
@@ -26,8 +26,8 @@ export const toggleMark: RawCommands['toggleMark'] =
   (typeOrName, attributes = {}, options = {}) =>
   ({ state, commands }) => {
     const { extendEmptyMarkRange = false } = options;
-    const type = editorHelper.getMarkType(typeOrName, state.schema);
-    const isActive = editorHelper.isMarkActive(state, type, attributes);
+    const type = getMarkType(typeOrName, state.schema);
+    const isActive = isMarkActive(state, type, attributes);
     if (isActive) {
       return commands.unsetMark(type, { extendEmptyMarkRange });
     }

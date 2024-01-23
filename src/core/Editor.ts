@@ -1,6 +1,6 @@
 import { Fragment, Schema } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
-import { editorHelper } from '../utils';
+import { isActive, resolveFocusPosition } from '../utils/editorHelper';
 import { CommandManager } from './CommandManager';
 import { EventEmitter } from './EventEmitter';
 import { ExtensionManager } from './ExtensionManager';
@@ -143,7 +143,7 @@ export class Editor extends EventEmitter<EditorEvents> {
     this.on('blur', this.options.onBlur);
     this.on('destroy', this.options.onDestroy);
 
-    const selection = editorHelper.resolveFocusPosition(doc, focusPosition);
+    const selection = resolveFocusPosition(doc, focusPosition);
     this.state = EditorState.create({
       schema: this.schema,
       doc: doc,
@@ -202,7 +202,7 @@ export class Editor extends EventEmitter<EditorEvents> {
         ? attributesOrUndefined
         : nameOrAttributes;
 
-    return editorHelper.isActive(this.state, name, attributes);
+    return isActive(this.state, name, attributes);
   }
 
   /**

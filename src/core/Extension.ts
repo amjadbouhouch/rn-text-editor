@@ -1,6 +1,10 @@
 import type { Plugin, Transaction } from 'prosemirror-state';
+import type { ExtensionConfig } from 'rn-text-editor';
+import { callOrReturn, mergeDeep } from '../utils/commonHelper';
+// import { getExtensionField } from '../utils/getExtensionField';
 import type { Editor } from './Editor';
 import type { InputRule } from './InputRule';
+import type { Mark } from './Mark';
 import type {
   AnyConfig,
   Extensions,
@@ -8,9 +12,7 @@ import type {
   ParentConfig,
   RawCommands,
 } from './types';
-import type { Mark } from './Mark';
-import { commonHelper, editorHelper } from '../utils';
-import type { ExtensionConfig } from 'rn-text-editor';
+import { getExtensionField } from '../utils/getExtensionField';
 
 declare module 'rn-text-editor' {
   interface ExtensionConfig<Options = any, Storage = any> {
@@ -335,27 +337,19 @@ export class Extension<Options = any, Storage = any> {
     this.options = this.config.defaultOptions;
 
     if (this.config.addOptions) {
-      this.options = commonHelper.callOrReturn(
-        editorHelper.getExtensionField<AnyConfig['addOptions']>(
-          this,
-          'addOptions',
-          {
-            name: this.name,
-          }
-        )
+      this.options = callOrReturn(
+        getExtensionField<AnyConfig['addOptions']>(this, 'addOptions', {
+          name: this.name,
+        })
       );
     }
 
     this.storage =
-      commonHelper.callOrReturn(
-        editorHelper.getExtensionField<AnyConfig['addStorage']>(
-          this,
-          'addStorage',
-          {
-            name: this.name,
-            options: this.options,
-          }
-        )
+      callOrReturn(
+        getExtensionField<AnyConfig['addStorage']>(this, 'addStorage', {
+          name: this.name,
+          options: this.options,
+        })
       ) || {};
   }
 
@@ -368,20 +362,16 @@ export class Extension<Options = any, Storage = any> {
     // with different calls of `configure`
     const extension = this.extend();
 
-    extension.options = commonHelper.mergeDeep(
+    extension.options = mergeDeep(
       this.options as Record<string, any>,
       options
     ) as Options;
 
-    extension.storage = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addStorage']>(
-        extension,
-        'addStorage',
-        {
-          name: extension.name,
-          options: extension.options,
-        }
-      )
+    extension.storage = callOrReturn(
+      getExtensionField<AnyConfig['addStorage']>(extension, 'addStorage', {
+        name: extension.name,
+        options: extension.options,
+      })
     );
 
     return extension;
@@ -407,29 +397,21 @@ export class Extension<Options = any, Storage = any> {
 
     if (extendedConfig.defaultOptions) {
       console.warn(
-        `[tiptap warn]: BREAKING CHANGE: "defaultOptions" is deprecated. Please use "addOptions" instead. Found in extension: "${extension.name}".`
+        `BREAKING CHANGE: "defaultOptions" is deprecated. Please use "addOptions" instead. Found in extension: "${extension.name}".`
       );
     }
 
-    extension.options = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addOptions']>(
-        extension,
-        'addOptions',
-        {
-          name: extension.name,
-        }
-      )
+    extension.options = callOrReturn(
+      getExtensionField<AnyConfig['addOptions']>(extension, 'addOptions', {
+        name: extension.name,
+      })
     );
 
-    extension.storage = commonHelper.callOrReturn(
-      editorHelper.getExtensionField<AnyConfig['addStorage']>(
-        extension,
-        'addStorage',
-        {
-          name: extension.name,
-          options: extension.options,
-        }
-      )
+    extension.storage = callOrReturn(
+      getExtensionField<AnyConfig['addStorage']>(extension, 'addStorage', {
+        name: extension.name,
+        options: extension.options,
+      })
     );
 
     return extension;
