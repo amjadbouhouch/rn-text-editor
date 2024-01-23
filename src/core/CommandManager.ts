@@ -162,7 +162,6 @@ export class CommandManager {
     return props;
   }
   setSelection = (start: number, end?: number) => {
-    console.log(start);
     const tr = this.editor.state.tr;
     const doc = this.state.doc;
     /**

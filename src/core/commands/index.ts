@@ -11,6 +11,7 @@ export * from './unsetMark';
 export * from './deleteSelection';
 export * from './deleteBeforeCursor';
 export * from './deleteRange';
+export * from './setNode';
 declare module 'rn-text-editor' {
   export interface Commands<ReturnType = any> {}
 }

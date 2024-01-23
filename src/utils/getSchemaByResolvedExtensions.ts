@@ -116,7 +116,6 @@ export function getSchemaByResolvedExtensions(
           })
         ),
       });
-
       const parseHTML = callOrReturn(
         getExtensionField<NodeConfig['parseHTML']>(
           extension,

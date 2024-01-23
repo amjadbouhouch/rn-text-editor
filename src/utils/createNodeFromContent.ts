@@ -11,7 +11,6 @@ export type CreateNodeFromContentOptions = {
   slice?: boolean;
   parseOptions?: ParseOptions;
 };
-
 export function createNodeFromContent(
   content: Content,
   schema: Schema,
@@ -44,7 +43,7 @@ export function createNodeFromContent(
       return createNodeFromContent('', schema, options);
     }
   }
-  // this should never called
+
   if (typeof content === 'string') {
     const parser = DOMParser.fromSchema(schema);
 

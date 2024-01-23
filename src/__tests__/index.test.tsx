@@ -38,5 +38,5 @@ test('inset new text', () => {
 //   );
 //   newTr.insert(editor.state.doc.content.size, paragraphNode);
 //   editor.commandManager.dispatch(newTr);
-//   console.log(JSON.stringify(editor.contentAsJson()));
+
 // });

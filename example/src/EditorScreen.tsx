@@ -1,51 +1,13 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
-import { EditorContent, extensions, useEditor } from 'rn-text-editor';
+import { EditorContent, useEditor } from 'rn-text-editor';
 import Menu from './EditorMenu';
 import tw from './utils/tailwind';
 interface EditorScreenProps {}
 const EditorScreen = ({}: EditorScreenProps) => {
   const inputRef = React.useRef<TextInput>(null);
   const editor = useEditor({
-    initialContent: [
-      {
-        attrs: {
-          id: `1`,
-        },
-        type: 'paragraph',
-        content: [
-          {
-            type: 'text',
-            marks: [
-              {
-                type: 'bold',
-              },
-            ],
-            text: 'Hey there, ',
-          },
-          {
-            marks: [
-              {
-                type: 'bold',
-              },
-            ],
-            type: 'text',
-            text: 'ChatLover21',
-          },
-          {
-            type: 'text',
-            marks: [
-              {
-                type: 'highlight',
-              },
-            ],
-            text: ", your curiosity fuels the conversation! What's on your mind today?",
-          },
-        ],
-      },
-    ],
-
-    extensions: [extensions.EditorCommands, extensions.Bold, extensions.Italic],
+    enableCoreExtensions: true,
     onUpdate(props) {
       console.log(props.editor.contentAsJson());
     },

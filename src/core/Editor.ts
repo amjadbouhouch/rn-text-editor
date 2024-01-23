@@ -4,19 +4,21 @@ import { isActive, resolveFocusPosition } from '../utils/editorHelper';
 import { CommandManager } from './CommandManager';
 import { EventEmitter } from './EventEmitter';
 import { ExtensionManager } from './ExtensionManager';
-import * as extensions from './Extensions/index';
+import { extensions } from './Extensions/index';
 import type {
   AnyExtension,
   ChainedCommands,
+  Content,
   EditorEvents,
   Extensions,
   FocusPosition,
   JSONContent,
   SingleCommands,
 } from './types';
+import { createDocument } from '../utils/createDocument';
 export type EditorProps = {
   extensions: Extensions;
-  initialContent: JSONContent[];
+  initialContent: Content;
   focusPosition?: FocusPosition;
   enableCoreExtensions?: boolean;
   enableInputRules?: boolean;
@@ -39,9 +41,12 @@ export class Editor extends EventEmitter<EditorEvents> {
 
   public options: EditorProps = {
     extensions: [],
-    initialContent: [],
+    initialContent: {
+      type: 'doc',
+      content: [],
+    },
     focusPosition: 'end',
-    enableCoreExtensions: false,
+    enableCoreExtensions: true,
     enableInputRules: false,
     enablePasteRules: false,
     onBeforeCreate: () => null,
@@ -56,83 +61,16 @@ export class Editor extends EventEmitter<EditorEvents> {
   constructor(options: Partial<EditorProps>) {
     super();
     this.setOptions(options);
-    this.schema = new Schema({
-      nodes: {
-        doc: { content: 'block+' },
-        paragraph: {
-          content: 'inline*',
-          group: 'block',
-          attrs: { id: { default: null } },
-          parseDOM: [
-            {
-              tag: 'p',
-              // @ts-expect-error
-              getAttrs: (dom) => ({ id: dom.getAttribute('id') }),
-            },
-          ],
-          toDOM: (node) => ['p', { id: node.attrs.id }, 0],
-        },
-        text: { inline: true, group: 'inline' },
-      },
-      marks: {
-        bold: { parseDOM: [{ tag: 'strong' }], toDOM: () => ['strong', 0] },
-        // italic
-        italic: { parseDOM: [{ tag: 'em' }], toDOM: () => ['em', 0] },
-        strike: {
-          parseDOM: [{ tag: 's' }],
-          toDOM: () => ['s', 0],
-        },
-        highlight: {
-          parseDOM: [{ tag: 'mark' }],
-          toDOM: () => ['mark', 0],
-          attrs: {
-            color: {
-              default: null,
-            },
-          },
-        },
-        link: {
-          attrs: {
-            href: {
-              default: null,
-            },
-            label: {
-              default: null,
-            },
-          },
-          parseDOM: [
-            {
-              tag: 'a',
-              getAttrs: (dom) => ({
-                // @ts-expect-error
-                href: dom.getAttribute('href'),
-                // @ts-expect-error
-                label: dom.getAttribute('label'),
-              }),
-            },
-          ],
-          toDOM: (node) => [
-            'a',
-            { href: node.attrs.href, label: node.attrs.label },
-            0,
-          ],
-        },
-        // strikethrough
-        // code
-      },
-    });
+
     this.createExtensionManager();
 
     this.commandManager = new CommandManager({ editor: this });
+    this.createSchema();
     //
     // this.schema = this.extensionManager.schema;
 
     const { initialContent, focusPosition } = this.options;
-    const parsedContent = Fragment.fromArray(
-      initialContent.map((item) => this.schema.nodeFromJSON(item))
-    );
-    const doc = this.schema.node('doc', null, parsedContent);
-
+    const doc = createDocument(initialContent, this.schema);
     this.on('beforeCreate', this.options.onBeforeCreate);
     this.emit('beforeCreate', { editor: this });
     this.on('create', this.options.onCreate);
@@ -155,6 +93,11 @@ export class Editor extends EventEmitter<EditorEvents> {
       this.emit('create', { editor: this });
     }, 0);
   }
+
+  private createSchema() {
+    this.schema = this.extensionManager.schema;
+  }
+
   /**
    * Creates an extension manager.
    */
@@ -170,11 +113,7 @@ export class Editor extends EventEmitter<EditorEvents> {
       return ['extension', 'node', 'mark'].includes(extension.type);
     }) as AnyExtension[];
 
-    this.extensionManager = new ExtensionManager(
-      allExtensions,
-      this,
-      this.schema
-    );
+    this.extensionManager = new ExtensionManager(allExtensions, this);
   }
   dispatch(tr: Transaction) {
     const newState = this.state.apply(tr);

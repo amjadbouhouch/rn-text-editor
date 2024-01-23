@@ -38,7 +38,6 @@ export class EditorContent extends React.PureComponent<
       this.setState({ jsonContent: editor.contentAsJson() })
     );
   }
-  currentText = React.createRef<string>();
   onSelectionChange({
     nativeEvent: { selection },
   }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) {
@@ -139,9 +138,6 @@ export class EditorContent extends React.PureComponent<
         onSelectionChange={this.onSelectionChange.bind(this)}
         // autoCapitalize="none"
         spellCheck={false}
-        onChange={({ nativeEvent: { eventCount, target, text } }) => {
-          console.log('text changed!!', { eventCount, target, text });
-        }}
         {...rest}
       >
         {renderedNode}

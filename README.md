@@ -12,7 +12,7 @@ rn-text-editor - Built on top of [ProseMirror](https://prosemirror.net/)
 - [x] Menu actions
 - [x] Plugins + Extensions Support
 - [ ] Documentations
-- [ ] Dynamic schema
+- [x] Dynamic schema
 
 
 ## Features

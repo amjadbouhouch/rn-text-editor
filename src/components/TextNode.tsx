@@ -29,6 +29,7 @@ const TextNode = (node: JSONContent) => {
         },
         urlLinks && {
           color: '#0000EE',
+          textDecorationLine: 'underline',
         },
         textStyle && { color: textStyle.attrs?.color },
         highlight && {

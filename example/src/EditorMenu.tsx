@@ -46,7 +46,7 @@ const EditorMenu = ({ editor }: EditorMenuProps) => {
     {
       icon: 'format-color-highlight',
       isActive: editor.isActive('highlight'),
-      disabled: !editor.commandManager.createCan().toggleMark('highlight'),
+      disabled: !editor.commandManager.createCan().toggleHighlight(),
       onPress() {
         if (editor.commandManager.createCan().toggleMark('highlight')) {
           editor.commandManager

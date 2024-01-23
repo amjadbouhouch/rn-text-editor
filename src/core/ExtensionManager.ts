@@ -11,6 +11,7 @@ import { Mark } from './Mark';
 import { pasteRulesPlugin } from './PasteRule';
 import type { AnyConfig, Extensions, RawCommands } from './types';
 import { getExtensionField } from '../utils/getExtensionField';
+import { getSchemaByResolvedExtensions } from '../utils/getSchemaByResolvedExtensions';
 
 export class ExtensionManager {
   editor: Editor;
@@ -21,10 +22,11 @@ export class ExtensionManager {
 
   splittableMarks: string[] = [];
 
-  constructor(extensions: Extensions, editor: Editor, schema: Schema) {
+  constructor(extensions: Extensions, editor: Editor) {
     this.editor = editor;
-    this.schema = schema;
+
     this.extensions = ExtensionManager.resolve(extensions);
+    this.schema = getSchemaByResolvedExtensions(this.extensions, editor);
     this.extensions.forEach((extension) => {
       this.editor.extensionStorage[extension.name] = extension.storage;
       const context = {
